@@ -1,4 +1,4 @@
-package fr.cnav.alfresco.as.as_alfresco_extension.demoamp.test;
+package fr.cnav.alfresco.as.demoamp.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
