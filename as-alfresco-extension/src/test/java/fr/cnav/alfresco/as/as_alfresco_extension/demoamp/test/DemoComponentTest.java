@@ -2,8 +2,8 @@ package fr.cnav.alfresco.as.as_alfresco_extension.demoamp.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import fr.cnav.alfresco.as.demoamp.DemoComponent;
 
-import fr.cnav.alfresco.as.as_alfresco_extension.demoamp.DemoComponent;
 import org.alfresco.model.ContentModel;
 import org.alfresco.repo.security.authentication.AuthenticationUtil;
 import org.alfresco.service.cmr.repository.NodeRef;
