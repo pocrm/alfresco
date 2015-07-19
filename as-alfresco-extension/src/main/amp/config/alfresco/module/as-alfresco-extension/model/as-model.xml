@@ -27,7 +27,7 @@
 	<types>
 		<type name="as:assure">
 			<title>Type assure</title>
-			<parent>cm:content</parent>
+			<parent>cm:folder</parent>
 			<properties>
 				<property name="as:nir">
 					<title>Nir assure</title>
@@ -127,7 +127,7 @@
 
 		<type name="as:dossier">
 			<title>Type dossier AS</title>
-			<parent>cm:content</parent>
+			<parent>cm:folder</parent>
 			<properties>
 				<property name="as:nirDossier">
 					<title>Nir du dossier</title>
