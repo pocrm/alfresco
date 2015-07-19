@@ -25,18 +25,6 @@
 	<!-- =============================================================================================================== 
 		Constraints, Types, and Aspects go here... -->
 	<types>
-
-
-		<type name="as:folderAssure">
-			<title>Folder assure</title>
-			<parent>cm:folder</parent>
-		</type>
-
-		<type name="as:folderDossier">
-			<title>Folder dossier</title>
-			<parent>cm:folder</parent>
-		</type>
-
 		<type name="as:assure">
 			<title>Type assure</title>
 			<parent>cm:content</parent>

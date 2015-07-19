@@ -13,10 +13,7 @@ public class AsModel {
 	
 	public static final String AS_NAMESPACE_URI = "http://www.cnav.fr/model/content/1.0";
 	public static final String AS_PREFIX = "as";
-	
-	public static final String AS_TYPE_FOLDER_ASSURE = "folderAssure";
-	public static final String AS_TYPE_FOLDER_DOSSIER = "folderDossier";
-	
+		
 	public static final String AS_TYPE_ASSURE = "assure";
 	public static final String AS_PROPS_NIR = "nir";
 	public static final String AS_PROPS_NOM = "nom";
@@ -36,10 +33,7 @@ public class AsModel {
 	public static final String AS_TYPE_PJ = "pj";
 	public static final String AS_TYPE_PG = "pg";
 	
-	
-	public static final QName TYPE_FOLDER_ASSURE = QName.createQName(AS_NAMESPACE_URI, AS_TYPE_FOLDER_ASSURE);
-	public static final QName TYPE_FOLDER_DOSSIER= QName.createQName(AS_NAMESPACE_URI, AS_TYPE_FOLDER_DOSSIER);
-	
+		
 	public static final QName TYPE_ASSURE = QName.createQName(AS_NAMESPACE_URI, AS_TYPE_ASSURE);
 	public static final QName PROPS_NIR = QName.createQName(AS_NAMESPACE_URI, AS_PROPS_NIR);
 	public static final QName PROPS_NOM = QName.createQName(AS_NAMESPACE_URI, AS_PROPS_NOM);
