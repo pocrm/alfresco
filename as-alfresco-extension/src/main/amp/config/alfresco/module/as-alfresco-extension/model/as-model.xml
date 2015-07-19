@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model name="myc:contentModel" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+
+	<!-- Optional meta-data about the model -->
+	<description>modele de document pour l'AS</description>
+	<author>L306093</author>
+	<version>1.0</version>
+
+	<imports>
+		<!-- Import Alfresco Dictionary Definitions -->
+		<import uri="http://www.alfresco.org/model/dictionary/1.0"
+			prefix="d" />
+		<!-- Import Alfresco Content Domain Model Definitions -->
+		<import uri="http://www.alfresco.org/model/content/1.0" prefix="cm" />
+		<!-- Import Alfresco System Model Definitions -->
+		<import uri="http://www.alfresco.org/model/system/1.0" prefix="sys" />
+	</imports>
+
+	<!-- Custom namespace for your domain -->
+	<namespaces>
+		<namespace uri="http://www.cnav.fr/model/content/1.0"
+			prefix="as" />
+	</namespaces>
+
+	<!-- =============================================================================================================== 
+		Constraints, Types, and Aspects go here... -->
+	<types>
+
+
+		<type name="as:folderAssure">
+			<title>Folder assure</title>
+			<parent>cm:folder</parent>
+		</type>
+
+		<type name="as:folderDossier">
+			<title>Folder dossier</title>
+			<parent>cm:folder</parent>
+		</type>
+
+		<type name="as:assure">
+			<title>Type assure</title>
+			<parent>cm:content</parent>
+			<properties>
+				<property name="as:nir">
+					<title>Nir assure</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<atomic>false</atomic>
+						<stored>false</stored>
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+				<property name="as:nom">
+					<title>Nom assure</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<atomic>false</atomic>
+						<stored>false</stored>
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+				<property name="as:prenom">
+					<title>Prenom assure</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<atomic>false</atomic>
+						<stored>false</stored>
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+			</properties>
+			<associations>
+				<association name="cm:detient">
+					<source>
+						<mandatory>false</mandatory>
+						<many>false</many>
+					</source>
+					<target>
+						<class>as:dossier</class>
+						<mandatory>false</mandatory>
+						<many>true</many>
+					</target>
+				</association>
+			</associations>
+		</type>
+
+		<type name="as:piece">
+			<title>Document Piece AS</title>
+			<parent>cm:content</parent>
+			<properties>
+				<property name="as:typePiece">
+					<title>Type de piece</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<atomic>false</atomic>
+						<stored>false</stored>
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+				<property name="as:libellePiece">
+					<title>Libelle piece</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<atomic>false</atomic>
+						<stored>false</stored>
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+				<property name="as:refPiece">
+					<title>Reference Piece</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<atomic>false</atomic>
+						<stored>false</stored>
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+				<property name="as:cleScellementPiece">
+					<title>Cle de scellement</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<atomic>false</atomic>
+						<stored>false</stored>
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+			</properties>
+		</type>
+
+		<type name="as:pj">
+			<title>Document PJ AS</title>
+			<parent>as:piece</parent>
+		</type>
+
+		<type name="as:pg">
+			<title>Document PG AS</title>
+			<parent>as:piece</parent>
+		</type>
+
+		<type name="as:dossier">
+			<title>Type dossier AS</title>
+			<parent>cm:content</parent>
+			<properties>
+				<property name="as:nirDossier">
+					<title>Nir du dossier</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<atomic>false</atomic>
+						<stored>false</stored>
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+				<property name="as:typeDossier">
+					<title>Nom assure</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<atomic>false</atomic>
+						<stored>false</stored>
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+				<property name="as:codeCaisseDossier">
+					<title>Code caisse dossier</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<atomic>false</atomic>
+						<stored>false</stored>
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+			</properties>
+			<associations>
+				<association name="cm:estCompose">
+					<source>
+						<mandatory>false</mandatory>
+						<many>false</many>
+					</source>
+					<target>
+						<class>as:piece</class>
+						<mandatory>false</mandatory>
+						<many>true</many>
+					</target>
+				</association>
+			</associations>
+		</type>
+
+	</types>
+	<aspects>
+		<aspect name="as:cpp_a_PdfEnCours">
+			<title>Pdf en cours de construction</title>
+			<properties>
+				<property name="as:dateEtatPdfEnCours">
+					<type>d:datetime</type>
+				</property>
+			</properties>
+		</aspect>
+
+	</aspects>
+
+</model>
