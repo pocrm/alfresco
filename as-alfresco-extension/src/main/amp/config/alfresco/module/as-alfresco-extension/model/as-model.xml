@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model name="myc:contentModel" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+<model name="as:actionSocialeModel" xmlns="http://www.alfresco.org/model/dictionary/1.0">
 
 	<!-- Optional meta-data about the model -->
 	<description>modele de document pour l'AS</description>
@@ -25,6 +25,12 @@
 	<!-- =============================================================================================================== 
 		Constraints, Types, and Aspects go here... -->
 	<types>
+
+		<type name="as:pliCapture">
+			<title>Type Pli Capture</title>
+			<parent>cm:folder</parent>
+		</type>
+
 		<type name="as:assure">
 			<title>Type assure</title>
 			<parent>cm:folder</parent>
@@ -57,19 +63,7 @@
 					</index>
 				</property>
 			</properties>
-			<associations>
-				<association name="cm:detient">
-					<source>
-						<mandatory>false</mandatory>
-						<many>false</many>
-					</source>
-					<target>
-						<class>as:dossier</class>
-						<mandatory>false</mandatory>
-						<many>true</many>
-					</target>
-				</association>
-			</associations>
+		
 		</type>
 
 		<type name="as:piece">
@@ -106,6 +100,33 @@
 				<property name="as:cleScellementPiece">
 					<title>Cle de scellement</title>
 					<type>d:text</type>
+					<index enabled="true">
+						<atomic>false</atomic>
+						<stored>false</stored>
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+				<property name="as:identifiantLot">
+					<title>Cle de scellement</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<atomic>false</atomic>
+						<stored>false</stored>
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+				<property name="as:identifiantPli">
+					<title>Cle de scellement</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<atomic>false</atomic>
+						<stored>false</stored>
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+				<property name="as:dateReceptionPiece">
+					<title>Date de reception</title>
+					<type>d:datetime</type>
 					<index enabled="true">
 						<atomic>false</atomic>
 						<stored>false</stored>
@@ -157,32 +178,8 @@
 					</index>
 				</property>
 			</properties>
-			<associations>
-				<association name="cm:estCompose">
-					<source>
-						<mandatory>false</mandatory>
-						<many>false</many>
-					</source>
-					<target>
-						<class>as:piece</class>
-						<mandatory>false</mandatory>
-						<many>true</many>
-					</target>
-				</association>
-			</associations>
 		</type>
 
 	</types>
-	<aspects>
-		<aspect name="as:cpp_a_PdfEnCours">
-			<title>Pdf en cours de construction</title>
-			<properties>
-				<property name="as:dateEtatPdfEnCours">
-					<type>d:datetime</type>
-				</property>
-			</properties>
-		</aspect>
-
-	</aspects>
-
+	
 </model>
