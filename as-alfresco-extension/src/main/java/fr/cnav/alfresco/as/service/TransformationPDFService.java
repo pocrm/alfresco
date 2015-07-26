@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.cnav.alfresco.as.exception.TechniqueException;
-import fr.cnav.alfresco.as.capture.pdf.metier.DocumentCapture;
+import fr.cnav.alfresco.as.capture.pdf.pli.DocumentCapture;
 
 public interface TransformationPDFService {
 

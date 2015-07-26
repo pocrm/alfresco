@@ -4,224 +4,233 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.namespace.QName;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 
-import fr.cnav.alfresco.as.capture.pdf.metier.DocumentCapture;
-import fr.cnav.alfresco.as.capture.pdf.metier.Lot;
-import fr.cnav.alfresco.as.capture.pdf.metier.Lot.LotIndexTech;
-import fr.cnav.alfresco.as.capture.pdf.metier.Lot.Pli.Document;
-import fr.cnav.alfresco.as.capture.pdf.metier.Lot.Pli.Document.Page;
-import fr.cnav.alfresco.as.capture.pdf.metier.Lot.Pli.PliIndexTech;
-import fr.cnav.alfresco.as.capture.pdf.metier.PageCapture;
-import fr.cnav.alfresco.as.capture.pdf.metier.PliCapture;
+import fr.cnav.alfresco.as.capture.pdf.pli.DocumentCapture;
+import fr.cnav.alfresco.as.capture.pdf.pli.Lot;
+import fr.cnav.alfresco.as.capture.pdf.pli.PageCapture;
+import fr.cnav.alfresco.as.capture.pdf.pli.PliCapture;
+import fr.cnav.alfresco.as.capture.pdf.pli.Lot.LotIndexTech;
+import fr.cnav.alfresco.as.capture.pdf.pli.Lot.Pli.Document;
+import fr.cnav.alfresco.as.capture.pdf.pli.Lot.Pli.PliIndexTech;
+import fr.cnav.alfresco.as.capture.pdf.pli.Lot.Pli.Document.Page;
 import fr.cnav.alfresco.as.exception.FonctionnelleException;
 import fr.cnav.alfresco.as.exception.TechniqueException;
-import fr.cnav.alfresco.as.exception.TifAbsentException;
 import fr.cnav.alfresco.as.exception.XMLIncorrectException;
-import fr.cnav.alfresco.as.helper.RepositoryHelper;
 import fr.cnav.alfresco.as.model.AsModel;
 
+/**
+ * @author LECOCQ
+ * 
+ */
 public class MetadataFactory {
 
-	public static final String TAG_LOT_ID = "lot_physique";
-	public static final String TAG_PLI_ID = "lot_nom";
-	public static final String TAG_DATE_RECEPTION = "date_reception";
-	public static final String TAG_ORGANISME = "organisme";
-	public static final String TAG_NIR = "nir";
-	public static final String TAG_NOM = "nom";
-	public static final String TAG_PRENOM= "prenom";
-	public static final String TAG_TYPE_DEMANDE= "s_type_demande";
-	public static final String TAG_CODE_DOCUMENT = "code_document";
+	static final String TAG_LOT_ID = "lot_physique";
+	static final String TAG_PLI_ID = "lot_nom";
+	static final String TAG_DATE_RECEPTION = "date_reception";
+	static final String TAG_ORGANISME = "organisme";
+	static final String TAG_NIR = "nir";
+	static final String TAG_NOM = "nom";
+	static final String TAG_PRENOM = "prenom";
+	static final String TAG_TYPE_DEMANDE = "s_type_demande";
+	static final String TAG_CODE_DOCUMENT = "code_document";
 
-
+	// cette map doit correspondre aux metadatas de toutes les pièces du pli.
+	// toutefois avant de creer le noeud piece
+	// il faudra ajouter la métadata type_piece , qui est dans chaque document
+	// créés lors de l'appel de la méthode getDocumentsPages
+	// l'ajout doit être fait par le PlService, lors de la création de chaque
+	// pièce
+	// le type piece est récuperable en appelant getCodeDocument() sur le
+	// document à créer
+	// il me semble que c'est déjà fait ==> à vérifier
 	@SuppressWarnings("serial")
-	public static final Map<String, QName> CONSTANT_QNAME_PROPERTY_MAP_PLI = Collections.unmodifiableMap(new HashMap<String, QName>() {
-		{
+	public static final Map<String, QName> CONSTANT_QNAME_PROPERTY_MAP_PIECE = Collections
+			.unmodifiableMap(new HashMap<String, QName>() {
+				{
+					put(TAG_LOT_ID, AsModel.PROP_ID_LOT);
+					put(TAG_PLI_ID, AsModel.PROP_ID_PLI);
+					put(TAG_DATE_RECEPTION, AsModel.PROP_DATE_RECEPTION_PIECE);
 
-			put(TAG_LOT_ID, AsModel.PROP_ID_LOT);
-			put(TAG_PLI_ID, AsModel.PROP_ID_PLI);
-			put(TAG_DATE_RECEPTION, AsModel.PROP_DATE_RECEPTION_PIECE);
-			put(TAG_ORGANISME, AsModel.PROP_CODE_CAISSE_DOSSIER);
-			put(TAG_NIR, AsModel.PROP_NIR);
-			put(TAG_NOM, AsModel.PROP_NOM);
-			put(TAG_PRENOM, AsModel.PROP_PRENOM);
-			put(TAG_TYPE_DEMANDE, AsModel.PROP_TYPE_DOSSIER);
+				}
+			});
 
-		}
-	});
-	
-	
+	// cette map correspond aux métadatas d'un assure. il faudra récupérer les
+	// metadatas de l''assuré
+	// avant de lancer la création de l'assuré par l'AssureService
+	@SuppressWarnings("serial")
+	public static final Map<String, QName> CONSTANT_QNAME_PROPERTY_MAP_ASSURE = Collections
+			.unmodifiableMap(new HashMap<String, QName>() {
+				{
+					put(TAG_NIR, AsModel.PROP_NIR);
+					put(TAG_NOM, AsModel.PROP_NOM);
+					put(TAG_PRENOM, AsModel.PROP_PRENOM);
+
+				}
+			});
+	// cette map correspond aux métadatas d'un dossier. il faudra récupérer les
+	// metadatas du dossier
+	// avant de lancer la création du dossier par le DossierService
+	@SuppressWarnings("serial")
+	public static final Map<String, QName> CONSTANT_QNAME_PROPERTY_MAP_DOSSIER = Collections
+			.unmodifiableMap(new HashMap<String, QName>() {
+				{
+					put(TAG_ORGANISME, AsModel.PROP_CODE_CAISSE_DOSSIER);
+					put(TAG_NIR, AsModel.PROP_NIR);
+					put(TAG_TYPE_DEMANDE, AsModel.PROP_TYPE_DOSSIER);
+
+				}
+			});
 
 	static Logger logger = Logger.getLogger(MetadataFactory.class);
 
 	/**
-	 * Lecture des meta data du pli
+	 * Lecture des metadatas sur le lot et le pli
+	 * 
 	 * 
 	 * @param unPli
-	 *            Le pli à traiter
-	 * @return les meta data du pli
+	 *            : Le pli en cours
+	 * @param datas
+	 *            : une map correspondant à l'une de celles qui sont définies
+	 *            dans cette classe
+	 * 
+	 *            exemple d'appel : MetadataFactory.getMetadatas(unPli,
+	 *            MetadataFactory.CONSTANT_QNAME_PROPERTY_MAP_ASSURE)
+	 * 
+	 * @return les metadatas indiquées dans la map en entrée
 	 * @throws TechniqueException
 	 */
-	public static Map<QName, Serializable> getMetadatas(PliCapture unPli) throws TechniqueException {
-		logger.setLevel(RepositoryHelper.getInstance().getLogLevel());
+	public static Map<QName, Serializable> getMetadatas(PliCapture unPli,
+			Map<String, QName> datas) throws TechniqueException {
+
 		logger.trace("***** DEBUT getMetaDatas");
 
-		// liste des métadatas à complèter (tous les documents issus du PDF
-		// auront les mêmes métadatas)
 		Map<QName, Serializable> lesMetadatas = new HashMap<QName, Serializable>();
 
 		// recherche de tous les nodes index-lot_tech
-		// NodeList listOfIndexTech =
-		// docXml.getElementsByTagName(ICapturePdf.TAG_LOT_INDEX_TECH);
 		List<Lot.LotIndexTech> lesIndexLot = unPli.getLeLot().getLotIndexTech();
-		for (Iterator<LotIndexTech> iterator = lesIndexLot.iterator(); iterator.hasNext();) {
-			Lot.LotIndexTech lotIndexTech = iterator.next();
-			if (CONSTANT_QNAME_PROPERTY_MAP_PLI.containsKey(lotIndexTech.getNom())) {
+
+		for (LotIndexTech lotIndexTech : lesIndexLot) {
+			if (datas.containsKey(lotIndexTech.getNom())) {
 				logger.debug("Property = " + lotIndexTech.getNom());
 				logger.debug("Valeur = " + lotIndexTech.getVal());
-				gestionFormatProperty(lesMetadatas, CONSTANT_QNAME_PROPERTY_MAP_PLI.get(lotIndexTech.getNom()), lotIndexTech.getVal());
-
+				lesMetadatas.put(datas.get(lotIndexTech.getNom()),
+						gestionFormatProperty(lotIndexTech.getVal()));
 			}
-
 		}
 
-		List<Lot.Pli.PliIndexTech> lesPliIndexTech = unPli.getLeLot().getPli().getPliIndexTech();
-
-		for (Iterator<PliIndexTech> iterator = lesPliIndexTech.iterator(); iterator.hasNext();) {
-			Lot.Pli.PliIndexTech pliIndexTech = iterator.next();
-			if (CONSTANT_QNAME_PROPERTY_MAP_PLI.containsKey(pliIndexTech.getNom())) {
-				gestionFormatProperty(lesMetadatas, CONSTANT_QNAME_PROPERTY_MAP_PLI.get(pliIndexTech.getNom()), pliIndexTech.getVal());
+		List<Lot.Pli.PliIndexTech> lesPliIndexTech = unPli.getLeLot().getPli()
+				.getPliIndexTech();
+		for (PliIndexTech pliIndexTech : lesPliIndexTech) {
+			if (datas.containsKey(pliIndexTech.getNom())) {
+				logger.debug("Property = " + pliIndexTech.getNom());
+				logger.debug("Valeur = " + pliIndexTech.getVal());
+				lesMetadatas.put(datas.get(pliIndexTech.getNom()),
+						gestionFormatProperty(pliIndexTech.getVal()));
 			}
-
 		}
-
-		
 
 		logger.trace("***** FIN getMetaDatas");
 		return lesMetadatas;
 	}
 
 	/**
-	 * Recupération des meta data des pages des documents du pli
+	 * Recupération des documents et des pages du pli ainsi que leurs métadatas
 	 * 
-	 * @param unLot
-	 *            Le lot
 	 * @param unPli
 	 *            Le pli
 	 * @return
 	 * @throws TechniqueException
 	 * @throws FonctionnelleException
 	 */
-	public static <E> ArrayList<DocumentCapture> getDocumentsPages(PliCapture unPli) throws TechniqueException, FonctionnelleException {
+	public static <E> ArrayList<DocumentCapture> getDocuments(
+			PliCapture unPli) throws TechniqueException, FonctionnelleException {
 
-		RepositoryHelper repoHelper = RepositoryHelper.getInstance();
-		logger.setLevel(repoHelper.getLogLevel());
-
-		logger.trace("***** DEBUT getDocumentsPages");
-		Lot unLot = unPli.getLeLot();
-		// lesInfos = liste des documents issus du XML
-		ArrayList<DocumentCapture> lesInfosPdf = new ArrayList<DocumentCapture>();
+		logger.trace("***** DEBUT getDocuments");
+		
+		ArrayList<DocumentCapture> lesDocuments = new ArrayList<DocumentCapture>();
 		// déclaration de la liste des pages
-		TreeMap<Integer, PageCapture> lesPages;
 
 		try {
 			// recherche de tous les node document dans le XML
-			List<Document> listOfDocuments = unLot.getPli().getDocument();
 			DocumentCapture unDocumentATraiter = null;
 			String nomFichier = null;
 			// pour chaque node document
-			for (Iterator<Document> iterator = listOfDocuments.iterator(); iterator.hasNext();) {
-				Document unDocument = iterator.next();
-				nomFichier = unPli.getNomPli() + "_" + unDocument.getRangDocPli();
+
+			for (Document unDocument : unPli.getLeLot().getPli().getDocument()) {
+
+				nomFichier = unPli.getNomPli() + "_"
+						+ unDocument.getRangDocPli();
 				logger.debug("nom du fichier pdf a generer = " + nomFichier);
+				logger.debug("rang du document = " + unDocument.getRangDocPli());
+				logger.debug("code du modele = "+ unDocument.getDocIndexTech().getVal());
 				
-				lesPages = new TreeMap<Integer, PageCapture>();
-				unDocumentATraiter = new DocumentCapture(nomFichier, lesPages);
-				
-				// AQ : On renseigne le rang du doc dans le pli
-				unDocumentATraiter.setIntRangDocPli(unDocument.getRangDocPli());
-				logger.debug("rang du document = " + unDocumentATraiter.getIntRangDocPli());
-				
-				// PL : on recupère le code document (le seul index technique du document)
-				unDocumentATraiter.setCodeDocument(unDocument.getDocIndexTech().getVal());
-				logger.debug("code du modele = " + unDocumentATraiter.getCodeDocument());
-				lesInfosPdf.add(unDocumentATraiter);
+				unDocumentATraiter = new DocumentCapture(nomFichier, unDocument.getRangDocPli(),unDocument.getDocIndexTech()
+						.getVal(),new TreeMap<Integer, PageCapture>());
 
-				List<Page> listOfPages = unDocument.getPage();
-				for (Iterator<Page> iteratorPages = listOfPages.iterator(); iteratorPages.hasNext();) {
-					Page unePage = iteratorPages.next();
+				lesDocuments.add(unDocumentATraiter);
 
-					String nomTiff = unePage.getPagePath();
+				for (Page unePage : unDocument.getPage()) {
 
-					logger.debug("nom du tif en cours = " + nomTiff);
-					NodeRef nodeTiff = repoHelper.searchSimple(unPli.getFileInfoFolder().getNodeRef(), nomTiff);
-
-					if (nodeTiff == null) {
-						logger.debug("Fichier TIF " + nomTiff + " non trouvé");
-						// si le document tif n'est pas trouvé - Erreur
-						throw new TifAbsentException("Pli " + unPli.getNomPli() + " - " + PliCapture.ERREUR_TIF_INTROUVABLE + nomTiff);
-					} else {
-
-						// création d'un objet Page
-						PageCapture uneNouvellePage = new PageCapture(nodeTiff);
-						// on ajoute la page au document à générer avec son rang
-						unDocumentATraiter.put(unePage.getRangPage(), uneNouvellePage);
-						
-
-					}
+					// on ajoute la page au document à générer avec son rang
+					unDocumentATraiter.put(unePage.getRangPage(),
+							new PageCapture(unePage.getPagePath()));
 
 				}
-
 			}
-			logger.trace("***** FIN getDocumentsPages");
+			logger.trace("***** FIN getDocuments");
 
-			return lesInfosPdf;
+			return lesDocuments;
 		} catch (Exception e) {
 
-			throw new XMLIncorrectException("Pli " + unPli.getNomPli() + " - Erreur Technique lors de l'extraction des metadonnées XML", e);
+			throw new XMLIncorrectException(
+					"Pli "
+							+ unPli.getNomPli()
+							+ " - Erreur Technique lors de l'extraction des metadonnées XML",
+					e);
 
 		}
 
 	}
 
-	private static void gestionFormatProperty(Map<QName, Serializable> lesMetadatas, QName property, String strToFormat) {
+	/**
+	 * 
+	 * @param strToFormat
+	 */
+	private static Serializable gestionFormatProperty(String strToFormat) {
 
 		logger.trace("***** DEBUT gestionFormatProperty  : " + strToFormat);
-
-		// DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
-		// DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd");
-		// Date dTemp;
+		Object result = null;
 
 		logger.debug("chaine à formater = " + strToFormat);
 
 		if (strToFormat.length() < 10) {
 			logger.debug("Type <> date");
-			lesMetadatas.put(property, strToFormat);
+			result = strToFormat;
 
 		} else {
 			try {
 
 				DateTime dt = new DateTime(strToFormat);
 				logger.debug("Type = date");
-				lesMetadatas.put(property, dt.toCalendar(Locale.FRENCH).getTime());
+				result = dt.toCalendar(Locale.FRENCH).getTime();
 			} catch (Exception e) {
 
 				logger.debug("Type <> date");
-				lesMetadatas.put(property, strToFormat);
+				result = strToFormat;
 
 			}
 		}
 
 		logger.trace("***** FIN gestionFormatProperty");
+		return (Serializable) result;
 	}
 
 }

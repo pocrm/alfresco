@@ -34,40 +34,40 @@ import org.alfresco.service.namespace.QName;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.Days;
 import org.joda.time.Minutes;
+import org.springframework.beans.factory.InitializingBean;
 
-import fr.cnav.alfresco.as.capture.pdf.metier.PliCapture;
+import fr.cnav.alfresco.as.capture.pdf.pli.PliCapture;
 import fr.cnav.alfresco.as.exception.PliExistantException;
 import fr.cnav.alfresco.as.exception.PropertiesException;
 import fr.cnav.alfresco.as.exception.TechniqueException;
 
 
-public class RepositoryHelper {
+public class RepositoryHelper implements InitializingBean{
 
 	public static final String GLOBAL_PROPS_DELAIS_TRAITEMENT_PDF = "cpp.pdf.delais.traitement";
 	public static final String GLOBAL_PROPS_LOG_LEVEL = "cpp.log_level";
 	public static final String GLOBAL_PROPS_URL_DOC = "cpp.url.doc";
 	public static final String GLOBAL_PROPS_LOCK_TTL = "cpp.lock.ttl";
 
-	public static RepositoryHelper getInstance() {
+//	public static RepositoryHelper getInstance() {
+//
+//		return instance;
+//
+//	}
 
-		return instance;
-
-	}
-
-	private final ServiceRegistry serviceRegistry;
-	private final GetNodesWithAspectCannedQueryFactory nodesWithAspectCannedQueryFactory;
-	private final NodeService nodeService;
-	private final ContentService contentService;
-	private final FileFolderService fileFolderService;
-	private final Properties properties;
-	private final SearchService searchService;
+	private ServiceRegistry serviceRegistry;
+	private  GetNodesWithAspectCannedQueryFactory nodesWithAspectCannedQueryFactory;
+	private  NodeService nodeService;
+	private  Properties properties;
 	
+	private  ContentService contentService;
+	private FileFolderService fileFolderService;
+	private  SearchService searchService;
 	
 	private StoreRef nodeStore;
-
-
 	private Map<String, String> lesProprietes;
 
 	static RepositoryHelper instance;
@@ -101,6 +101,22 @@ public class RepositoryHelper {
 	}
 
 	
+	public void setServiceRegistry(ServiceRegistry serviceRegistry) {
+		this.serviceRegistry = serviceRegistry;
+	}
+	
+	public void setNodesWithAspectCannedQueryFactory(
+			GetNodesWithAspectCannedQueryFactory nodesWithAspectCannedQueryFactory) {
+		this.nodesWithAspectCannedQueryFactory = nodesWithAspectCannedQueryFactory;
+	}
+
+	public Properties getProperties() {
+		return properties;
+	}
+
+	public void setProperties(Properties properties) {
+		this.properties = properties;
+	}
 
 	public boolean hasAspect(NodeRef node, QName aspect) throws TechniqueException {
 		boolean bret = false;
@@ -400,6 +416,29 @@ public class RepositoryHelper {
 	public AssociationRef createRelation(NodeRef source, NodeRef target, QName relation){
 		
 		return nodeService.createAssociation(source, target, relation);
+	}
+
+	public void afterPropertiesSet() throws Exception {
+		
+		nodeService = serviceRegistry.getNodeService();
+		contentService = serviceRegistry.getContentService();
+		fileFolderService = serviceRegistry.getFileFolderService();
+		searchService = serviceRegistry.getSearchService();
+		
+		this.nodeStore = new StoreRef(StoreRef.PROTOCOL_WORKSPACE, "SpacesStore");
+		this.initLesProprietes();
+		logger.setLevel(getLogLevel());
+		
+	}
+
+	public String getNodeName(NodeRef nodeRef) {
+		
+		return (String) nodeService.getProperty(nodeRef, ContentModel.PROP_NAME);
+	}
+
+	public DateTime getCreatedDate(NodeRef nodeRef) {
+		
+		return new DateTime(nodeService.getProperty(nodeRef, ContentModel.PROP_CREATED));
 	}
 
 }

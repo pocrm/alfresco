@@ -26,9 +26,10 @@ import org.alfresco.service.cmr.action.ParameterDefinition;
 import org.alfresco.service.cmr.repository.NodeRef;
 import org.apache.log4j.Logger;
 
-import fr.cnav.alfresco.as.capture.pdf.metier.PliCapture;
+import fr.cnav.alfresco.as.capture.pdf.pli.PliCapture;
 import fr.cnav.alfresco.as.exception.FonctionnelleException;
 import fr.cnav.alfresco.as.exception.TechniqueException;
+import fr.cnav.alfresco.as.helper.RepositoryHelper;
 import fr.cnav.alfresco.as.service.PliService;
 
 /**
@@ -66,6 +67,12 @@ public class TraitementCapturePDFActionExecuter extends ActionExecuterAbstractBa
 	static Logger logger = Logger.getLogger(TraitementCapturePDFActionExecuter.class);
 
 	private PliService pliService;
+	
+	private RepositoryHelper repositoryHelper;
+
+	public void setRepositoryHelper(RepositoryHelper repositoryHelper) {
+		this.repositoryHelper = repositoryHelper;
+	}
 
 	public void setPliService(PliService pliService) {
 		this.pliService = pliService;
@@ -80,7 +87,7 @@ public class TraitementCapturePDFActionExecuter extends ActionExecuterAbstractBa
 
 			logger.trace("******* DEBUT ACTION  " + action.getActionDefinitionName() + " ***********");
 
-			unPli = new PliCapture(actionedUponNodeRef);
+			unPli = new PliCapture(actionedUponNodeRef,repositoryHelper);
 
 			pliService.executeTraitementPli(actionedUponNodeRef);
 

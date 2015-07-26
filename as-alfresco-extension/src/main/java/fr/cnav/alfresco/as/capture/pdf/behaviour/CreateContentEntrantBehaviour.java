@@ -19,7 +19,11 @@ public class CreateContentEntrantBehaviour implements NodeServicePolicies.OnCrea
 	// Dependencies
 	private NodeService nodeService;
 	private PolicyComponent policyComponent;
-	RepositoryHelper repoHelper = RepositoryHelper.getInstance();
+	private RepositoryHelper repoHelper ;
+
+	public void setRepoHelper(RepositoryHelper repoHelper) {
+		this.repoHelper = repoHelper;
+	}
 
 	static Logger logger = Logger.getLogger(CreateContentEntrantBehaviour.class);
 
@@ -37,7 +41,6 @@ public class CreateContentEntrantBehaviour implements NodeServicePolicies.OnCrea
 		this.policyComponent = policyComponent;
 	}
 
-	@Override
 	public void onCreateNode(ChildAssociationRef node) {
 		try {
 

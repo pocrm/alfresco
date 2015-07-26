@@ -1,4 +1,4 @@
-package fr.cnav.alfresco.as.capture.pdf.metier;
+package fr.cnav.alfresco.as.capture.pdf.pli;
 
 import java.util.Collection;
 import java.util.TreeMap;
@@ -16,13 +16,13 @@ public class DocumentCapture {
 	
 	static Logger logger = Logger.getLogger(DocumentCapture.class);
 
-	public DocumentCapture() {
+	
 
-	}
-
-	public DocumentCapture(String nomPdf, TreeMap<Integer, PageCapture> lesPages) {
+	public DocumentCapture(String nomPdf,int rang, String codeDocument, TreeMap<Integer, PageCapture> lesPages) {
 		super();
 		this.nomPdf = nomPdf + PliCapture.EXTENSION_PDF;
+		this.intRangDocPli = rang;
+		this.codeDocument = codeDocument;
 		this.lesPages = lesPages;
 
 	}

@@ -5,7 +5,7 @@
 // Generated on: 2015.02.25 at 06:26:57 PM CET 
 //
 
-package fr.cnav.alfresco.as.capture.pdf.metier;
+package fr.cnav.alfresco.as.capture.pdf.pli;
 
 import javax.xml.bind.annotation.XmlRegistry;
 
